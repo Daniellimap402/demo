@@ -1,0 +1,15 @@
+version: '3.5'
+
+services:
+
+  postgres:
+
+    container_name: demo_container
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: demodatabase
+      POSTGRES_USER: demo
+      POSTGRES_PASSWORD: demo123
+    ports:
+      - "5432:5432"
