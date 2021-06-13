@@ -16,12 +16,16 @@ public class PessoaDTO implements Serializable {
     @NotBlank
     private String nome;
 
+    @NotBlank
+    private String senha;
+
     @Email
     private String email;
 
     @NotBlank
-    private String cpf;
+    private String cpfCnpj;
 
     @NotBlank
-    private String cartao;
+    private String numTelefone;
+
 }

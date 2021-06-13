@@ -13,13 +13,17 @@
             <column  name="NOME"  type="varchar(100)">
                 <constraints  nullable="false"/>
             </column>
+            <column  name="SENHA"  type="varchar(20)">
+                <constraints  nullable="false"/>
+            </column>
             <column name="EMAIL" type="varchar(256)">
                 <constraints nullable="false"/>
             </column>
-            <column name="CPF" type="varchar(11)">
+            <column name="CPF_CNPJ" type="varchar(15)">
                 <constraints nullable="false"/>
             </column>
-            <column name="CARTAO" type="varchar(20)"></column>
+            <column name="NUM_TELEFONE" type="varchar(20)">
+            </column>
             <column  name="REGISTRO_ATIVO"  type="char(1)">
                 <constraints nullable="false"/>
             </column>

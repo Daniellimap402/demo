@@ -3,7 +3,6 @@ package com.example.demo.domain;
 import com.example.demo.service.enumerations.RegistroAtivoEnum;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.context.annotation.Primary;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -26,16 +25,19 @@ public class Pessoa {
     @Column(name = "NOME", nullable = false)
     private String nome;
 
+    @Column(name = "SENHA", nullable = false)
+    private String senha;
+
     @Column(name = "EMAIL", nullable = false)
     private String email;
 
-    @Column(name = "CPF", nullable = false)
-    private String cpf;
+    @Column(name = "CPF_CNPJ", nullable = false)
+    private String cpfCnpj;
 
-    @Column(name = "CARTAO")
-    private String cartao;
+    @Column(name = "NUM_TELEFONE")
+    private String numTelefone;
 
-    @Column(name = "REGISTRO_ATIVO")
+    @Column(name = "REGISTRO_ATIVO", nullable = false)
     private RegistroAtivoEnum registroAtivo;
 
 }

@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
+import java.util.List;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -28,4 +30,9 @@ public class PessoaService {
         pessoa.setRegistroAtivo(RegistroAtivoEnum.A);
         return this.mapper.toDto(this.repository.save(pessoa));
     }
+
+    public List<PessoaDTO> listar(){
+        return this.mapper.toDto(this.repository.findAll());
+    }
+
 }
