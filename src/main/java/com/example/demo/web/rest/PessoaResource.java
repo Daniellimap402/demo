@@ -5,6 +5,7 @@ import com.example.demo.service.dto.PessoaDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,6 +37,7 @@ public class PessoaResource {
     }
 
     @GetMapping("/listar")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<List<PessoaDTO>> listar(){
         return ResponseEntity.ok(this.service.listar());
     }

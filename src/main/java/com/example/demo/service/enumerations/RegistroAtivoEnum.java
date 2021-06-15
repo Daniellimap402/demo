@@ -6,8 +6,8 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum RegistroAtivoEnum {
-    A("ATIVO"),
-    I("INATIVO");
+    S("Sim"),
+    N("Nao");
 
     private String value;
 }

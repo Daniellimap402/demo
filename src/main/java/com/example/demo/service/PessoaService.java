@@ -27,7 +27,7 @@ public class PessoaService {
 
     public PessoaDTO salvar(PessoaDTO pessoaDTO){
         Pessoa pessoa = this.mapper.toEntity(pessoaDTO);
-        pessoa.setRegistroAtivo(RegistroAtivoEnum.A);
+        pessoa.setRegistroAtivo(RegistroAtivoEnum.S);
         return this.mapper.toDto(this.repository.save(pessoa));
     }
 
