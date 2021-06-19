@@ -1,25 +1,16 @@
 package com.example.demo.web.rest;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import javax.validation.Valid;
-
 import com.example.demo.configuration.security.jwt.JwtUtils;
 import com.example.demo.configuration.security.services.UserDetailsImpl;
-import com.example.demo.domain.Permissao;
 import com.example.demo.domain.Pessoa;
 import com.example.demo.payload.request.LoginRequest;
-import com.example.demo.payload.request.SignupRequest;
 import com.example.demo.payload.response.JwtResponse;
-import com.example.demo.payload.response.MessageResponse;
-import com.example.demo.repository.PermissaoRepository;
 import com.example.demo.repository.PessoaRepository;
-import com.example.demo.service.enumerations.PermissoesEnum;
+import com.example.demo.service.dto.PessoaDTO;
+import com.example.demo.service.enumerations.PermissaoEnum;
 import com.example.demo.service.enumerations.RegistroAtivoEnum;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.demo.service.mapper.PessoaMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -34,28 +25,29 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/auth")
 @Component
+@RequiredArgsConstructor
 @EnableAutoConfiguration
 public class AuthResource {
-    @Autowired
-    AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
-    @Autowired
-    PessoaRepository userRepository;
+    private final PessoaRepository userRepository;
 
-    @Autowired
-    PermissaoRepository roleRepository;
+    private final PessoaMapper mapper;
 
-    @Autowired
-    PasswordEncoder encoder;
+    private final PasswordEncoder encoder;
 
-    @Autowired
-    JwtUtils jwtUtils;
+    private final JwtUtils jwtUtils;
 
-    @PostMapping("/signin")
+    @PostMapping("/entrar")
     public ResponseEntity<JwtResponse> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
         Authentication authentication = authenticationManager.authenticate(
@@ -67,36 +59,30 @@ public class AuthResource {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         List<String> roles;
 
-        Pessoa pessoa = userRepository.findById(userDetails.getId()).orElseThrow(() -> new RuntimeException("Error: User is not found."));
-        roles = (pessoa.getRoles().stream().map(role -> role.getNome().name()).collect(Collectors.toList()));
+        Pessoa pessoa = userRepository.findById(userDetails.getId()).orElseThrow(() -> new RuntimeException("Error: Usuario não encontrado."));
+        roles = (pessoa.getRoles().stream().map(role -> role.name()).collect(Collectors.toList()));
 
         return ResponseEntity.ok(new JwtResponse(jwt,
-                userDetails.getId(),
                 userDetails.getUsername(),
                 userDetails.getEmail(),
                 userDetails.getDocumento(),
-                userDetails.getNumTelefone(),
                 roles));
     }
 
-    @PostMapping("/signup")
-    public ResponseEntity<MessageResponse> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
+    @PostMapping("/registrar")
+    public ResponseEntity<PessoaDTO> registerUser(@Valid @RequestBody PessoaDTO pessoaDTO) {
 
-        Pessoa user = new Pessoa(signUpRequest.getNome(),
-                signUpRequest.getEmail(),
-                encoder.encode(signUpRequest.getSenha()),
-                signUpRequest.getDocumento(), signUpRequest.getNumTelefone());
+        Pessoa pessoa = mapper.toEntity(pessoaDTO);
+        pessoa.setSenha(encoder.encode(pessoaDTO.getSenha()));
 
-        Set<Permissao> roles = new HashSet<>();
+        List<PermissaoEnum> roles = new ArrayList<>();
 
-        Permissao userRole = roleRepository.findByNome(PermissoesEnum.USUARIO)
-                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-        roles.add(userRole);
+        roles.add(PermissaoEnum.ADMIN);
 
-        user.setRoles(roles);
-        user.setRegistroAtivo(RegistroAtivoEnum.S);
-        userRepository.save(user);
+        pessoa.setRoles(roles);
+        pessoa.setRegistroAtivo(RegistroAtivoEnum.S);
+        userRepository.save(pessoa);
 
-        return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+        return ResponseEntity.ok(mapper.toDto(pessoa));
     }
 }

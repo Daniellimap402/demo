@@ -1,12 +1,15 @@
 package com.example.demo.domain;
 
+import com.example.demo.service.enumerations.PermissaoEnum;
 import com.example.demo.service.enumerations.RegistroAtivoEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -14,13 +17,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Setter
@@ -55,17 +54,9 @@ public class Pessoa {
     @Enumerated(EnumType.STRING)
     private RegistroAtivoEnum registroAtivo;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(	name = "TB_PESSOA_PERMISSAO",
-            joinColumns = @JoinColumn(name = "PESSOA_ID"),
-            inverseJoinColumns = @JoinColumn(name = "PERMISSAO_ID"))
-    private Set<Permissao> roles = new HashSet<>();
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "TB_PERMISSAO_USUARIO")
+    @Enumerated(EnumType.STRING)
+    private List<PermissaoEnum> roles;
 
-    public Pessoa(String username, String email, String password, String documento, String numTelefone) {
-        this.nome = username;
-        this.email = email;
-        this.senha = password;
-        this.documento = documento;
-        this.numTelefone = numTelefone;
-    }
 }

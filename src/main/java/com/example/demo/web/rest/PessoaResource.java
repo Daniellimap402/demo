@@ -8,12 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -30,14 +27,8 @@ public class PessoaResource {
         return "teste autenticacao";
     }
 
-    @PostMapping
-    public ResponseEntity<PessoaDTO> salvar(@RequestBody @Valid PessoaDTO pessoaDto) {
-        PessoaDTO pessoa = this.service.salvar(pessoaDto);
-        return ResponseEntity.ok(pessoa);
-    }
-
     @GetMapping("/listar")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ResponseEntity<List<PessoaDTO>> listar(){
         return ResponseEntity.ok(this.service.listar());
     }

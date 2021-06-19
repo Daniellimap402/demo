@@ -1,9 +1,7 @@
 package com.example.demo.service;
 
-import com.example.demo.domain.Pessoa;
 import com.example.demo.repository.PessoaRepository;
 import com.example.demo.service.dto.PessoaDTO;
-import com.example.demo.service.enumerations.RegistroAtivoEnum;
 import com.example.demo.service.mapper.PessoaMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +22,6 @@ public class PessoaService {
 
     @Autowired
     private  PessoaMapper mapper;
-
-    public PessoaDTO salvar(PessoaDTO pessoaDTO){
-        Pessoa pessoa = this.mapper.toEntity(pessoaDTO);
-        pessoa.setRegistroAtivo(RegistroAtivoEnum.S);
-        return this.mapper.toDto(this.repository.save(pessoa));
-    }
 
     public List<PessoaDTO> listar(){
         return this.mapper.toDto(this.repository.findAll());

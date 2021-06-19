@@ -14,20 +14,16 @@ import java.util.List;
 public class JwtResponse {
     private String token;
     private String type = "Bearer";
-    private Long id;
     private String username;
     private String email;
     private String documento;
-    private String numTelefone;
     private List<String> roles;
 
-    public JwtResponse(String accessToken, Long id, String username, String email, String documento, String numTelefone, List<String> roles) {
+    public JwtResponse(String accessToken, String username, String email, String documento, List<String> roles) {
         this.token = accessToken;
-        this.id = id;
         this.username = username;
         this.email = email;
         this.documento = documento;
-        this.numTelefone = numTelefone;
         this.roles = roles;
     }
 }
