@@ -9,7 +9,9 @@ import com.example.demo.repository.PessoaRepository;
 import com.example.demo.service.dto.PessoaDTO;
 import com.example.demo.service.enumerations.PermissaoEnum;
 import com.example.demo.service.enumerations.RegistroAtivoEnum;
+import com.example.demo.service.error.NegocioException;
 import com.example.demo.service.mapper.PessoaMapper;
+import com.example.demo.service.util.ConstantesUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.ResponseEntity;
@@ -48,7 +50,7 @@ public class AuthResource {
     private final JwtUtils jwtUtils;
 
     @PostMapping("/entrar")
-    public ResponseEntity<JwtResponse> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<JwtResponse> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) throws NegocioException {
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
@@ -59,7 +61,7 @@ public class AuthResource {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         List<String> roles;
 
-        Pessoa pessoa = userRepository.findById(userDetails.getId()).orElseThrow(() -> new RuntimeException("Error: Usuario não encontrado."));
+        Pessoa pessoa = userRepository.findById(userDetails.getId()).orElseThrow(() -> new NegocioException(ConstantesUtil.ERROR_TITLE," Usuario não encontrado."));
         roles = (pessoa.getRoles().stream().map(role -> role.name()).collect(Collectors.toList()));
 
         return ResponseEntity.ok(new JwtResponse(jwt,
