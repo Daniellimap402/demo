@@ -23,14 +23,19 @@ public class UserDetailsImpl implements UserDetails {
 
     private String email;
 
-    private String documento;
-
-    private String numTelefone;
-
     @JsonIgnore
     private String password;
 
     private Collection<? extends GrantedAuthority> authorities;
+
+    public String getNome() {
+        return this.username;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.email;
+    }
 
     @Override
     public boolean isAccountNonExpired() {

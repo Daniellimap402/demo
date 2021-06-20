@@ -63,9 +63,8 @@ public class AuthResource {
         roles = (pessoa.getRoles().stream().map(role -> role.name()).collect(Collectors.toList()));
 
         return ResponseEntity.ok(new JwtResponse(jwt,
-                userDetails.getUsername(),
+                userDetails.getNome(),
                 userDetails.getEmail(),
-                userDetails.getDocumento(),
                 roles));
     }
 

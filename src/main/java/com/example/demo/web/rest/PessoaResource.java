@@ -22,13 +22,8 @@ public class PessoaResource {
     @Autowired
     private PessoaService service;
 
-    @GetMapping("")
-    public String login(){
-        return "teste autenticacao";
-    }
-
     @GetMapping("/listar")
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
     public ResponseEntity<List<PessoaDTO>> listar(){
         return ResponseEntity.ok(this.service.listar());
     }
