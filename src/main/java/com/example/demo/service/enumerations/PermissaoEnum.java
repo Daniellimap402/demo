@@ -1,13 +1,13 @@
 package com.example.demo.service.enumerations;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
-@Getter
-public enum RegistroAtivoEnum {
-    S("Sim"),
-    N("Nao");
+@NoArgsConstructor
+public enum PermissaoEnum {
+    USUARIO("USUARIO"),
+    ADMIN("ADMIN");
 
     private String value;
 }

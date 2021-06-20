@@ -1,18 +1,17 @@
 package com.example.demo.web.rest;
 
-import com.example.demo.domain.Pessoa;
 import com.example.demo.service.PessoaService;
 import com.example.demo.service.dto.PessoaDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,9 +22,9 @@ public class PessoaResource {
     @Autowired
     private PessoaService service;
 
-    @PostMapping
-    public ResponseEntity<Pessoa> salvar(@RequestBody @Valid PessoaDTO pessoaDto) {
-        service.salvar(pessoaDto);
-        return ResponseEntity.ok().build();
+    @GetMapping("/listar")
+    @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
+    public ResponseEntity<List<PessoaDTO>> listar(){
+        return ResponseEntity.ok(this.service.listar());
     }
 }
