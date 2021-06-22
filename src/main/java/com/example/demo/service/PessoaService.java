@@ -72,4 +72,8 @@ public class PessoaService {
         return this.mapper.toDto(pessoa);
     }
 
+    public Boolean validarPessoa(PessoaDTO pessoa) throws NegocioException {
+        return this.repository.validarDuplicidade(pessoa).orElseThrow(() -> new NegocioException(ConstantesUtil.ERROR_TITLE, ConstantesUtil.PESSOA_DUPLICADA ));
+    }
+
 }

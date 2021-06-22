@@ -8,6 +8,7 @@ import com.example.demo.payload.response.JwtResponse;
 import com.example.demo.repository.PessoaRepository;
 import com.example.demo.service.EmailService;
 import com.example.demo.service.dto.ModeloEmailDTO;
+import com.example.demo.service.PessoaService;
 import com.example.demo.service.dto.PessoaDTO;
 import com.example.demo.service.enumerations.PermissaoEnum;
 import com.example.demo.service.enumerations.RegistroAtivoEnum;
@@ -43,6 +44,8 @@ import java.util.stream.Collectors;
 public class AuthResource {
     private final AuthenticationManager authenticationManager;
 
+    private final PessoaService pessoaService;
+
     private final PessoaRepository userRepository;
 
     private final PessoaMapper mapper;
@@ -77,6 +80,7 @@ public class AuthResource {
     @PostMapping("/registrar")
     public ResponseEntity<Void> registerUser(@Valid @RequestBody PessoaDTO pessoaDTO) throws NegocioException {
 
+        pessoaService.validarPessoa(pessoaDTO);
         Pessoa pessoa = mapper.toEntity(pessoaDTO);
         pessoa.setSenha(encoder.encode(pessoaDTO.getSenha()));
 
