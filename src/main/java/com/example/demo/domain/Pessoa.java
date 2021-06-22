@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -17,6 +18,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import java.util.List;
@@ -44,15 +47,9 @@ public class Pessoa {
     @Column(name = "EMAIL", nullable = false, unique = true, length = 256)
     private String email;
 
-    @Column(name = "DOCUMENTO", nullable = false, unique = true, length = 14)
-    private String documento;
-
-    @Column(name = "NUM_TELEFONE", unique = true, length = 15)
-    private String numTelefone;
-
-    @Column(name = "REGISTRO_ATIVO", nullable = false, length = 1)
+    @Column(name = "EMAIL_VERIFICADO", nullable = false, length = 1)
     @Enumerated(EnumType.STRING)
-    private RegistroAtivoEnum registroAtivo;
+    private RegistroAtivoEnum emailVerificado;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "TB_PERMISSAO_USUARIO")

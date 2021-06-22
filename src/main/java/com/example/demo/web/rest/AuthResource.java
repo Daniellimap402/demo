@@ -6,6 +6,8 @@ import com.example.demo.domain.Pessoa;
 import com.example.demo.payload.request.LoginRequest;
 import com.example.demo.payload.response.JwtResponse;
 import com.example.demo.repository.PessoaRepository;
+import com.example.demo.service.EmailService;
+import com.example.demo.service.dto.ModeloEmailDTO;
 import com.example.demo.service.dto.PessoaDTO;
 import com.example.demo.service.enumerations.PermissaoEnum;
 import com.example.demo.service.enumerations.RegistroAtivoEnum;
@@ -49,6 +51,8 @@ public class AuthResource {
 
     private final JwtUtils jwtUtils;
 
+    private final EmailService emailService;
+
     @PostMapping("/entrar")
     public ResponseEntity<JwtResponse> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) throws NegocioException {
 
@@ -71,7 +75,7 @@ public class AuthResource {
     }
 
     @PostMapping("/registrar")
-    public ResponseEntity<PessoaDTO> registerUser(@Valid @RequestBody PessoaDTO pessoaDTO) {
+    public ResponseEntity<Void> registerUser(@Valid @RequestBody PessoaDTO pessoaDTO) throws NegocioException {
 
         Pessoa pessoa = mapper.toEntity(pessoaDTO);
         pessoa.setSenha(encoder.encode(pessoaDTO.getSenha()));
@@ -81,9 +85,12 @@ public class AuthResource {
         roles.add(PermissaoEnum.ADMIN);
 
         pessoa.setRoles(roles);
-        pessoa.setRegistroAtivo(RegistroAtivoEnum.S);
+        pessoa.setEmailVerificado(RegistroAtivoEnum.N);
         userRepository.save(pessoa);
+        String CONFIRMAR_EMAIL = ConstantesUtil.ROTA_CONFIRMAR_EMAIL_PESSOA +pessoa.getEmail();
+        ModeloEmailDTO modeloEmailDTO = new ModeloEmailDTO("Confirmaçao Email","Abra esse link para confirmar seu email: " + CONFIRMAR_EMAIL,pessoa.getEmail());
+        emailService.enviarEmail(modeloEmailDTO);
+        return ResponseEntity.ok().build();
 
-        return ResponseEntity.ok(mapper.toDto(pessoa));
     }
 }

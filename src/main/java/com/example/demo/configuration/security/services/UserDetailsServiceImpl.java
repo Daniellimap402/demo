@@ -21,7 +21,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Transactional
     public UserDetails loadUserByUsername(String credencial) throws UsernameNotFoundException {
-        Pessoa pessoa = userRepository.findByEmailOrDocumento(credencial)
+        Pessoa pessoa = userRepository.findByEmail(credencial)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario não encontrado com as credenciais: " + credencial));
         return mapper.toUserDetails(pessoa);
     }

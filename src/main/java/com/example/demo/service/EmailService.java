@@ -1,6 +1,8 @@
 package com.example.demo.service;
 
 import com.example.demo.service.dto.ModeloEmailDTO;
+import com.example.demo.service.error.NegocioException;
+import com.example.demo.service.util.ConstantesUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,7 +34,7 @@ public class EmailService {
     @Value("${mail.nome}")
     private String nomeRemetente;
 
-    public void enviarEmail(ModeloEmailDTO modeloEmailDTO) throws MessagingException {
+    public void enviarEmail(ModeloEmailDTO modeloEmailDTO) throws NegocioException {
 
         Properties props = getProperties();
 
@@ -43,10 +45,12 @@ public class EmailService {
         });
 
         mailSession.setDebug(true);
-
-        Message msg = getMessage(modeloEmailDTO, mailSession);
-
-        encaminharEmail(mailSession, msg);
+        try{
+            Message msg = getMessage(modeloEmailDTO, mailSession);
+            encaminharEmail(mailSession, msg);
+        }catch (MessagingException e){
+            throw new NegocioException(ConstantesUtil.ERROR_TITLE, ConstantesUtil.ERROR_ENVIO_EMAIL);
+        }
     }
 
     private void encaminharEmail(Session mailSession, Message msg) throws MessagingException {

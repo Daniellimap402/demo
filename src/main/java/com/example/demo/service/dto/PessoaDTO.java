@@ -24,15 +24,6 @@ public class PessoaDTO implements Serializable {
     @Email
     private String email;
 
-    @NotBlank
-    @Size(max = 14)
-    @Email
-    private String documento;
-
-    @NotBlank
-    @Size(max = 15)
-    private String numTelefone;
-
     private Set<String> role;
 
     @NotBlank
